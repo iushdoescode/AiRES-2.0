@@ -37,20 +37,16 @@ const Header = () => {
         </Link>
 
         <div className="flex gap-8 items-center">
-          <Link to="/resume-analysis">
-            <Button variant="secondary" className="rounded-full">
-              <FileBarChart2 size={18} className="mr-2" />
-              Resume Analysis
-            </Button>
-          </Link>
-
-          <SignedOut>
-            <Button variant="outline" onClick={() => setShowSignIn(true)}>
-              Login
-            </Button>
-          </SignedOut>
-
           <SignedIn>
+            {user?.unsafeMetadata?.role !== "recruiter" && (
+              <Link to="/resume-analysis">
+                <Button variant="secondary" className="rounded-full">
+                  <FileBarChart2 size={18} className="mr-2" />
+                  Resume Analysis
+                </Button>
+              </Link>
+            )}
+
             {user?.unsafeMetadata?.role === "recruiter" && (
               <Link to="/post-job">
                 <Button variant="destructive" className="rounded-full">
@@ -59,6 +55,7 @@ const Header = () => {
                 </Button>
               </Link>
             )}
+
             <UserButton
               appearance={{
                 elements: {
@@ -77,10 +74,21 @@ const Header = () => {
                   labelIcon={<Heart size={15} />}
                   href="/saved-jobs"
                 />
+                <UserButton.Link
+                  label="Analysis History"
+                  labelIcon={<FileBarChart2 size={15} />}
+                  href="/analysis-history"
+                />
                 <UserButton.Action label="manageAccount" />
               </UserButton.MenuItems>
             </UserButton>
           </SignedIn>
+
+          <SignedOut>
+            <Button variant="outline" onClick={() => setShowSignIn(true)}>
+              Login
+            </Button>
+          </SignedOut>
         </div>
       </nav>
 

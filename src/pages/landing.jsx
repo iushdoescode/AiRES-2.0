@@ -15,8 +15,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
 
 const LandingPage = () => {
+  const { user } = useUser();
+
   return (
     <main className="flex flex-col gap-10 sm:gap-20 py-10 sm:py-20">
       <section className="text-center ">
@@ -31,16 +34,36 @@ const LandingPage = () => {
         </p>
       </section>
       <div className="flex gap-6 justify-center">
-        <Link to={"/jobs"}>
-          <Button variant="blue" size="xl">
-            Find Jobs
-          </Button>
-        </Link>
-        <Link to={"/post-job"}>
-          <Button variant="destructive" size="xl">
-            Post a Job
-          </Button>
-        </Link>
+        <SignedOut>
+          <Link to={"/jobs"}>
+            <Button variant="blue" size="xl">
+              Find Jobs
+            </Button>
+          </Link>
+          <Link to={"/post-job"}>
+            <Button variant="destructive" size="xl">
+              Post a Job
+            </Button>
+          </Link>
+        </SignedOut>
+
+        <SignedIn>
+          {user?.unsafeMetadata?.role !== "recruiter" && (
+            <Link to={"/jobs"}>
+              <Button variant="blue" size="xl">
+                Find Jobs
+              </Button>
+            </Link>
+          )}
+          
+          {user?.unsafeMetadata?.role === "recruiter" && (
+            <Link to={"/post-job"}>
+              <Button variant="destructive" size="xl">
+                Post a Job
+              </Button>
+            </Link>
+          )}
+        </SignedIn>
       </div>
       <Carousel
         plugins={[
